@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Email Assistant",
+  "version": "1.0.0",
+  "description": "Email Assistant is a Chrome extension that helps you write better emails with gmail.",
+  "icons": {
+    // "48": "images/icon-48.png",
+    // "128": "images/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["index.js", "content-popup.js", "icon-button.js", "button-appender.js"],
+      "css": ["icon-button.css"]
+    }
+  ]
+}
