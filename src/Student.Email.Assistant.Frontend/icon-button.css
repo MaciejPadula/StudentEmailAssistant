@@ -1,0 +1,15 @@
+.assistant-icon-button {
+  cursor: pointer;
+  width: fit-content;
+  padding: 0.5rem;
+  border-radius: 100%;
+  transition: background-color 0.2s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.assistant-icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
