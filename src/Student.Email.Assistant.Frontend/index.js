@@ -36,10 +36,22 @@ function addGenerateTitleButton(titleInput, contentInput) {
 
 function addImproveEmailButton(contentInput) {
   const improveContentButtonClass = "improve-content";
+  const contentInputValueContainer = contentInput.querySelector(".aO7 div");
   const btn = createIconButton(
     "auto_fix_high",
     improveContentButtonClass,
-    () => {}
+    async () => {
+      const response = await fetch(`${apiUrl}/api/improve-content`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "email_content": contentInputValueContainer.innerHTML
+        }),
+      });
+      contentInputValueContainer.innerText = await response.json();
+    }
   );
   btn.style.position = "absolute";
   btn.style.top = "0";
