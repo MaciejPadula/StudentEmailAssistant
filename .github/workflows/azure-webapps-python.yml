@@ -37,6 +37,7 @@ jobs:
       - name: Go to backend
         run: |
           cd src/Student.Email.Assistant.Backend
+          ls -l
 
       - name: Docker Login
         run: |
