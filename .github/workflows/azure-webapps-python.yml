@@ -34,6 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Go to backend
+        run: |
+          cd src/Student.Email.Assistant.Backend
+
       - name: Docker Login
         run: |
           docker login -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} ${{ secrets.AZURE_URL }}
