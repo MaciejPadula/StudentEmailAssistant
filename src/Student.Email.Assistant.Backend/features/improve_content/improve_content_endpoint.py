@@ -55,16 +55,22 @@ async def improve_content(request: ImproveContentRequest) -> str:
             "content": [
                 {
                     "type": "text",
-                    "text": """Please review and correct the content of the email provided by the user. Try to insert lecturers's titles.
+                    "text": """
+                    
+                    Please review and correct the content of the email provided by the user. Try to insert lecturers's titles.
                     The email is written in an academic environment, so ensure that the language is formal, polite, and clear.
                     Make necessary corrections for grammar, spelling, and punctuation, and improve the overall flow and clarity of the text.
                     Respond in the language the email was written in, only with the corrected content.
                     
-                    Allowed forms of titles are:
+                    Allowed forms of titles are!!!:
                     - Panie Doktorze
                     - Pani Doktor
                     - Panie Profesorze
-                    - Pani Profesor"""
+                    - Pani Profesor
+                    
+                    If lecturer's title is not greater or equal to dr, pealse leave the title empty!!!
+
+                    """
                 }
             ]
         },
