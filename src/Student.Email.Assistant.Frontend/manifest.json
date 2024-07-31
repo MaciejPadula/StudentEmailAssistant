@@ -10,7 +10,7 @@
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
-      "js": ["index.js", "content-popup.js", "icon-button.js", "button-appender.js"],
+      "js": ["index.js", "content-popup.js", "icon-button.js", "button-appender.js", "replace-dialog.js"],
       "css": ["icon-button.css"]
     }
   ]
