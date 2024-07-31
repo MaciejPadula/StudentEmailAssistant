@@ -1,5 +1,10 @@
 from openai import OpenAI
 import os
+from langchain_openai import OpenAI as ai
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import ConversationalRetrievalChain
 
 
 def call_openai_api(messages, temperature = 0.9, max_tokens = 250):
@@ -7,7 +12,7 @@ def call_openai_api(messages, temperature = 0.9, max_tokens = 250):
     client = OpenAI(api_key=openai_api_key)
     
     return client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
@@ -15,7 +20,22 @@ def call_openai_api(messages, temperature = 0.9, max_tokens = 250):
         frequency_penalty=0,
         presence_penalty=0
     )
-    
+
+def call_lang_chain(question, documents):
+    llm = ai()
+    embeddings = OpenAIEmbeddings()
+
+    text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+    docs = text_splitter.split_documents(documents)
+    vector_db = FAISS.from_documents(docs, embeddings)
+    qa = ConversationalRetrievalChain.from_llm(
+       llm=llm, 
+       retriever= vector_db.as_retriever()
+    )
+
+    response = qa({"question":question, "chat_history": []})
+
+    return response
     
 # [
 #     {
