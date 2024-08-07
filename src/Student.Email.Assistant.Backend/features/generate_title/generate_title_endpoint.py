@@ -15,7 +15,9 @@ async def generate_title(request: GenerateTitleRequest) -> str:
                 "text": """Please generate an email title for email from user.
                     Email is written in an academic enviroment so be sure to use appropriate titles.
                     Be polite and make sure that title is as informative as possible.
-                    Respond in language email was written in, only with the title."""
+                    Respond in language email was written in, only with the title.
+                    Do not use dimunitives!!
+                    If an acronym is ecnountered please simply repeat it in the response, do not try to explain it!!"""
                 }
             ]
         },
