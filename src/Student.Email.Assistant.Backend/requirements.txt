@@ -2,3 +2,6 @@ fastapi==0.111.0
 openai==1.33.0
 chromadb==0.5.5
 langchain==0.2.11
+langchain_openai==0.1.19
+langchain_community==0.2.10
+faiss-cpu==1.8.0.post1

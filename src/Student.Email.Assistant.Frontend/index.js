@@ -25,7 +25,11 @@ function addGenerateTitleButton(titleInput, contentInput) {
           "email_content": contentInputValueContainer.innerHTML
         }),
       });
-      inputValueContainer.value = await response.json();
+      const popupResult = openDialog(await response.json());
+
+      if (popupResult.ok) {
+        inputValueContainer.value = popupResult.result;
+      }
     }
   );
   btn.style.position = "absolute";
@@ -51,7 +55,11 @@ function addImproveEmailButton(contentInput) {
           "email_content": contentInputValueContainer.innerHTML
         }),
       });
-      contentInputValueContainer.innerText = await response.json();
+      const popupResult = openDialog(await response.json());
+
+      if (popupResult.ok) {
+        contentInputValueContainer.innerText = popupResult.result;
+      }
     }
   );
   btn.style.position = "absolute";
