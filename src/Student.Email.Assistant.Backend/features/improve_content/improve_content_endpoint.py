@@ -20,7 +20,6 @@ documents = [
 @router.post("/api/improve-content")
 async def improve_content(request: ImproveContentRequest) -> str:
     res = call_lang_chain(f"Jaki tytuł ma {request.receiver_email}?", documents)
-
     prompt = [
         {
             "role": "system",
@@ -51,11 +50,15 @@ async def improve_content(request: ImproveContentRequest) -> str:
                     
                     If lecturer's title is only mgr or only mgr inz or only inz pealse leave the title empty!!!
 
+                    If title is equal or greater than dr, do not use lower titles.
+
                     Please do not alter the signature just copy and paste it, it's crucial for the app to work as intended.
 
                     Do not use diminutives like (e.g. poprawka).
                     
                     Result should be a HTML string containing tags for example <br/> instead of '\n' etc. It should not not be embedded in any sort of formatting block like ```
+                    
+                    Do not write '''html at the beggining.
 
                     """
                 }
@@ -76,6 +79,6 @@ async def improve_content(request: ImproveContentRequest) -> str:
         }
     ]
 
-    response = infrastructure.openai_client.call_openai_api(prompt)
+    response = infrastructure.openai_client.call_openai_api(prompt, max_tokens=4000)
     return response.choices[0].message.content.strip()
 
