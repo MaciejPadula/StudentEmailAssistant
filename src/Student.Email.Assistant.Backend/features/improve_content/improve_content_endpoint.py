@@ -19,34 +19,8 @@ documents = [
 
 @router.post("/api/improve-content")
 async def improve_content(request: ImproveContentRequest) -> str:
-    prompt = [
-        {
-            "role": "system",
-            "content": [
-                {
-                    "type": "text",
-                    "text": """Please extract name of the lecturer from the email content provided by the user. Return it in JSON format:
-                    {
-                      "name": "Name Surname"
-                    }
-                    """
-                }
-            ]
-        },
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": request.email_content
-                }
-            ]
-        }
-    ]
+    res = call_lang_chain(f"Jaki tytuł ma {request.receiver_email}?", documents)
 
-    response = infrastructure.openai_client.call_openai_api(prompt)
-    name_and_surname = json.loads(response.choices[0].message.content.strip().replace("json", "").replace("```", ""))['name']
-    res = call_lang_chain(f"Jaki tytuł ma {name_and_surname}?", documents)
     prompt = [
         {
             "role": "system",
@@ -80,6 +54,8 @@ async def improve_content(request: ImproveContentRequest) -> str:
                     Please do not alter the signature just copy and paste it, it's crucial for the app to work as intended.
 
                     Do not use diminutives like (e.g. poprawka).
+                    
+                    Result should be a HTML string containing tags for example <br/> instead of '\n' etc. It should not not be embedded in any sort of formatting block like ```
 
                     """
                 }
