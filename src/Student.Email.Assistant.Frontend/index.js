@@ -39,7 +39,7 @@ function addGenerateTitleButton(titleInput, contentInput) {
   tryAppendButton(titleInput, generateTitleButtonClass, btn);
 }
 
-function addImproveEmailButton(contentInput) {
+function addImproveEmailButton(contentInput, emailAccessor) {
   const improveContentButtonClass = "improve-content";
   const contentInputValueContainer = contentInput.querySelector(".aO7 div");
   const btn = createIconButton(
@@ -52,13 +52,14 @@ function addImproveEmailButton(contentInput) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          "receiver_email": emailAccessor(),
           "email_content": contentInputValueContainer.innerHTML
         }),
       });
       const popupResult = openDialog(await response.json());
 
       if (popupResult.ok) {
-        contentInputValueContainer.innerText = popupResult.result;
+        contentInputValueContainer.innerHTML = popupResult.result;
       }
     }
   );
@@ -71,7 +72,7 @@ function addImproveEmailButton(contentInput) {
 
 function processMailPopup(popup) {
   addGenerateTitleButton(popup.titleInput, popup.contentInput);
-  addImproveEmailButton(popup.contentInput);
+  addImproveEmailButton(popup.contentInput, popup.emailAccessor);
 }
 
 const observer = new MutationObserver(function (mutations, observer) {
