@@ -1,6 +1,6 @@
 from openai import OpenAI
 import os
-from langchain_openai import OpenAI as ai
+from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
@@ -22,7 +22,7 @@ def call_openai_api(messages, temperature = 0.9, max_tokens = 250):
     )
 
 def call_lang_chain(question, documents):
-    llm = ai()
+    llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
     embeddings = OpenAIEmbeddings()
 
     text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
