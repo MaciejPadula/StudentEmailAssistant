@@ -4,7 +4,7 @@ import infrastructure.openai_client
 from dotenv import load_dotenv
 from langchain.docstore.document import Document
 import json
-from infrastructure.openai_client import call_lang_chain
+from infrastructure.indexed_db_client import get_titles_for_email
 
 
 load_dotenv()
@@ -19,7 +19,7 @@ documents = [
 
 @router.post("/api/improve-content")
 async def improve_content(request: ImproveContentRequest) -> str:
-    res = call_lang_chain(f"Jaki tytuł ma {request.receiver_email}?", documents)
+    titles = get_titles_for_email(request.receiver_email)
     prompt = [
         {
             "role": "system",
@@ -27,39 +27,37 @@ async def improve_content(request: ImproveContentRequest) -> str:
                 {
                     "type": "text",
                     "text": """
-                    
-                    Please review and correct the content of the email provided by the user. Try to insert lecturers's titles.
-                    The email is written in an academic environment, so ensure that the language is formal, polite, and clear.
-                    Make necessary corrections for grammar, spelling, and punctuation, and improve the overall flow and clarity of the text.
-                    Respond in the language the email was written in, only with the corrected content.
+Please review and correct the content of the email provided by the user. Try to insert lecturers's titles.
+The email is written in an academic environment, so ensure that the language is formal, polite, and clear.
+Make necessary corrections for grammar, spelling, and punctuation, and improve the overall flow and clarity of the text.
+Respond in the language the email was written in, only with the corrected content.
 
-                    If the message is about a lesson or some kind of activity, use only information provided, do not assume the type of lessons or activities.
+If the message is about a lesson or some kind of activity, use only information provided, do not assume the type of lessons or activities.
 
-                    If an acronym is encountered, please do not try to explain what it means, simply repeat it.
-                    Be sure to repeat encountered acronyms, so the information is not lost.
+If an acronym is encountered, please do not try to explain what it means, simply repeat it.
+Be sure to repeat encountered acronyms, so the information is not lost.
 
-                    Assume sex of the receiver based on their name (receiver's name is male's name sex is MALE otherwise FEMALE).
+Assume sex of the receiver based on their name (receiver's name is male's name sex is MALE otherwise FEMALE).
 
-                    Do not mix genders of the receivers.
+Do not mix genders of the receivers.
 
-                    Please write one greeting only (example: Szanowna Pani Doktor or Szanowny Panie Doktorze
-                    not Szanowna Pani Doktor/Szanowny Panie Doktorze).
+Please write one greeting only (example: Szanowna Pani Doktor or Szanowny Panie Doktorze
+not Szanowna Pani Doktor/Szanowny Panie Doktorze).
 
-                    Titles are provided in user prompt (under "Title:"), if section is empty there are no titles.
-                    It is crucial that correct titles are used.
-                    
-                    If lecturer's title is only mgr or only mgr inz or only inz pealse leave the title empty!!!
+Titles are provided in user prompt (under "Title:"), if section is empty there are no titles in greeting.
+It is crucial that correct titles are used. Do not use titles that are provided in Email content, use titles only from Title property!!!
 
-                    If title is equal or greater than dr, do not use lower titles.
+If lecturer's title is only mgr or only mgr inz or only inz pealse leave the title empty!!!
 
-                    Please do not alter the signature just copy and paste it, it's crucial for the app to work as intended.
+If title is equal or greater than dr, do not use lower titles.
 
-                    Do not use diminutives like (e.g. poprawka).
-                    
-                    Result should be a HTML string containing tags for example <br/> instead of '\n' etc. It should not not be embedded in any sort of formatting block like ```
-                    
-                    Do not write '''html at the beggining.
+Please do not alter the signature just copy and paste it, it's crucial for the app to work as intended.
 
+Do not use diminutives like (e.g. poprawka).
+
+Result should be a HTML string containing tags for example <br/> instead of '\n' etc. It should not not be embedded in any sort of formatting block like ```
+
+Do not write '''html at the beggining.
                     """
                 }
             ]
@@ -73,7 +71,7 @@ async def improve_content(request: ImproveContentRequest) -> str:
                 },
                 {
                     "type": "text",
-                    "text": f"Title: {res['answer']}"
+                    "text": f"Title: {titles}"
                 }
             ]
         }
